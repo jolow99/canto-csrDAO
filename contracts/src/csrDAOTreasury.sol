@@ -87,7 +87,9 @@ contract FundPGTreasury is Ownable, IERC721Receiver {
 
     /// @notice Receive the NFT from the Canto turnstile contract
     /// @dev This function is called by the Canto turnstile contract when a token is safeTransferred to this contract
-    function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
+    function onERC721Received(address, address _from, uint256 _tokenId, bytes calldata) external pure returns (bytes4) {
+        require(msg.sender == address(0xEcf044C5B4b867CFda001101c617eCd347095B44), "Not the turnstile contract");
+        donors[_tokenId] = _from;
         return IERC721Receiver.onERC721Received.selector;
     }
 

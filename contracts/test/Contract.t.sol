@@ -7,6 +7,10 @@ import "src/FundPGGovernor.sol";
 import "src/FundPGToken.sol";
 import "src/FundPGTreasury.sol";
 
+// RPC URL: canto-testnet.plexnode.wtf
+// Account: 0x0c1514024c4A847907FbdB8eA0Dd95a4eeAe9237
+// Chain ID: 7701
+
 contract TestContract is Test {
     FundPGToken token;
     FundPGTreasury treasury;
