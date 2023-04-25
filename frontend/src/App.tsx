@@ -1,12 +1,9 @@
-import { ConnectWallet } from "@thirdweb-dev/react";
+import Navbar from "./components/Navbar";
 
-export default function Home() {
+export default function App() {
   return (
-        <div>
-          <ConnectWallet dropdownPosition={{
-            align: 'center',
-            side: 'bottom'
-          }} />
+        <div className="">
+          <Navbar/>
         </div>
   );
 }
