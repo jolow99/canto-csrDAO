@@ -17,13 +17,13 @@ interface ITreasury{
 
 
 
-contract FundPGGovernor is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction, GovernorTimelockControl {
+contract csrDAOGovernor is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction, GovernorTimelockControl {
     /// @dev Address of the treasury contract
     ITreasury public immutable treasury;
 
     
     constructor(IVotes _token, address payable _timelock, address _treasury)
-        Governor("FundPGGovernor")
+        Governor("csrDAOGovernor")
         GovernorSettings(1 /* 1 block */, 50400 /* 1 week */, 0)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(4)

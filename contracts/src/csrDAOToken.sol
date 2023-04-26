@@ -6,8 +6,8 @@ import "openzeppelin-contracts/contracts/access/Ownable.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
-contract FundPGToken is ERC20, Ownable, ERC20Permit, ERC20Votes {
-    constructor() ERC20("FundPG", "FPG") ERC20Permit("FundPG") {}
+contract csrDAOToken is ERC20, Ownable, ERC20Permit, ERC20Votes {
+    constructor() ERC20("csrDAO", "csrDAO") ERC20Permit("csrDAO") {}
 
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);

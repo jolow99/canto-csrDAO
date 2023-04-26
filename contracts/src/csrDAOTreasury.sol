@@ -15,12 +15,12 @@ interface ITurnstile {
     function withdraw(uint tokenId, address to, uint amount) external;
 }
 
-contract FundPGTreasury is Ownable, IERC721Receiver {
+contract csrDAOTreasury is Ownable, IERC721Receiver {
     /// @dev Canto turnstile contract
     ITurnstile public immutable turnstile;
 
-    /// @dev FundPG Voting Token
-    IVotingToken public immutable fpg;
+    /// @dev csrDAO Voting Token
+    IVotingToken public immutable csrDAO;
 
     /// @dev Address of the recipient of the treasury funds
     address public recipient;
@@ -43,10 +43,10 @@ contract FundPGTreasury is Ownable, IERC721Receiver {
     }
 
     /// @notice Sets the initial recipient and the Canto turnstile address
-    constructor(address _recipient, address _fpg) {
+    constructor(address _recipient, address _csrDAO) {
         recipient = _recipient;
         turnstile = ITurnstile(address(0xEcf044C5B4b867CFda001101c617eCd347095B44));
-        fpg = IVotingToken(_fpg);
+        csrDAO = IVotingToken(_csrDAO);
     }
 
     /// @notice Set the recipient of the treasury funds
@@ -67,12 +67,13 @@ contract FundPGTreasury is Ownable, IERC721Receiver {
         donations[msg.sender] += accruedCsr;
         totalDonations += accruedCsr;
         turnstile.withdraw(tokenId, address(this), accruedCsr);
-        fpg.mint(msg.sender, accruedCsr);
+        csrDAO.mint(msg.sender, accruedCsr);
     }
 
     /// @notice Stake the specified CSR NFT to this contract
     /// @dev The donor must have approved this contract to transfer the NFT
     /// @dev Does not use safeTransferFrom
+    /// @dev Supports donation method B
     function stakeCsrNft(uint tokenId) external {
         donors[tokenId] = msg.sender;
         turnstile.transferFrom(msg.sender, address(this), tokenId);
@@ -87,15 +88,24 @@ contract FundPGTreasury is Ownable, IERC721Receiver {
 
     /// @notice Receive the NFT from the Canto turnstile contract
     /// @dev This function is called by the Canto turnstile contract when a token is safeTransferred to this contract
-    function onERC721Received(address, address _from, uint256 _tokenId, bytes calldata) external pure returns (bytes4) {
+    /// @dev Supports donation method A
+    function onERC721Received(address, address _from, uint256 _tokenId, bytes calldata) external returns (bytes4) {
         require(msg.sender == address(0xEcf044C5B4b867CFda001101c617eCd347095B44), "Not the turnstile contract");
         donors[_tokenId] = _from;
         return IERC721Receiver.onERC721Received.selector;
     }
 
+    /// @notice Receive native CANTO from either the Turnstile, or directly from EOAs
+    /// @dev Supports donation methods C and 'others'
     receive() external payable {
-        donations[tx.origin] += msg.value;
         totalDonations += msg.value;
-        fpg.mint(tx.origin, msg.value);
+        if (msg.sender == address(turnstile)) {
+            donations[tx.origin] += msg.value;
+            csrDAO.mint(tx.origin, msg.value);
+        } else {
+            donations[msg.sender] += msg.value;
+            csrDAO.mint(msg.sender, msg.value);
+        }
+
     }
  }
