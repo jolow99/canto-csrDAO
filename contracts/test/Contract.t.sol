@@ -22,7 +22,7 @@ contract TestContract is Test {
         // Deploy the treasury and pass in the msg.sender as the first parameter and the token as the second parameter
         treasury = new csrDAOTreasury(msg.sender, address(token));
         // Deploy the governor and pass in the token as the first parameter, timelock as the second, and treasury as the third
-        governor = new csrDAOGovernor(token, payable(address(treasury)), address(treasury));
+        governor = new csrDAOGovernor(token);
 
         // Set owner of the token to the treasury
         token.transferOwnership(address(treasury));
