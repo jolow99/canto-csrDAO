@@ -22,9 +22,6 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
     /// @dev csrDAO Voting Token
     IVotingToken public immutable csrDAO;
 
-    /// @dev Address of the recipient of the treasury funds
-    address public recipient;
-
     /// @dev Total amount of donations
     uint public totalDonations;
 
@@ -49,14 +46,9 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
         csrDAO = IVotingToken(_csrDAO);
     }
 
-    /// @notice Set the recipient of the treasury funds
-    function setRecipient(address _newRecipient) external onlyOwner {
-        recipient = _newRecipient;
-    }
-
     /// @notice Withdraw funds from the treasury to the recipient
-    function withdraw(uint amount) external onlyOwner{
-        payable(recipient).transfer(amount);
+    function withdraw(address _recipient, uint _amount) external onlyOwner{
+        payable(_recipient).transfer(_amount);
     }
 
 
