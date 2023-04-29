@@ -29,19 +29,21 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
     mapping(address => uint) public donations;
 
     /// @dev Mapping from the token ID to the donor address
-    mapping(uint => address) public donors; 
+    mapping(uint => address) public donorOfTokenId; 
+
+    /// @dev Mapping from donor address to the token IDs donated
+    mapping(address => uint[]) public donorTokenIds; 
 
     error NotTheDonor();
 
     /// @dev only donor of _tokenId can call this function
     modifier onlyNftDonor(uint _tokenId) {
-        if (donors[_tokenId] != msg.sender) revert NotTheDonor();
+        if (donorOfTokenId[_tokenId] != msg.sender) revert NotTheDonor();
         _;
     }
 
     /// @notice Sets the initial recipient and the Canto turnstile address
-    constructor(address _recipient, address _csrDAO) {
-        recipient = _recipient;
+    constructor(address _csrDAO) {
         turnstile = ITurnstile(address(0xEcf044C5B4b867CFda001101c617eCd347095B44));
         csrDAO = IVotingToken(_csrDAO);
     }
@@ -67,14 +69,25 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
     /// @dev Does not use safeTransferFrom
     /// @dev Supports donation method B
     function stakeCsrNft(uint tokenId) external {
-        donors[tokenId] = msg.sender;
+        donorOfTokenId[tokenId] = msg.sender;
+        donorTokenIds[msg.sender].push(tokenId);
         turnstile.transferFrom(msg.sender, address(this), tokenId);
     }
 
     /// @notice Withdraw the specified CSR NFT from this contract
     /// @notice If the donor delegated upon stake, only the delegate can withdraw the NFT
     /// @dev Does not use safeTransferFrom
+    /// @dev Removes the tokenId from the donorTokenIds array
     function withdrawCsrNft(uint tokenId, address withdrawTo) external onlyNftDonor(tokenId) {
+        // Remove tokenId from the array of tokenIds in donorTokenIds
+        uint[] storage tokenIds = donorTokenIds[msg.sender];
+        for (uint i = 0; i < tokenIds.length; i++) {
+            if (tokenIds[i] == tokenId) {
+                tokenIds[i] = tokenIds[tokenIds.length - 1];
+                tokenIds.pop();
+                break;
+            }
+        }
         turnstile.transferFrom(address(this), withdrawTo, tokenId);
     }
 
@@ -83,7 +96,8 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
     /// @dev Supports donation method A
     function onERC721Received(address, address _from, uint256 _tokenId, bytes calldata) external returns (bytes4) {
         require(msg.sender == address(0xEcf044C5B4b867CFda001101c617eCd347095B44), "Not the turnstile contract");
-        donors[_tokenId] = _from;
+        donorOfTokenId[_tokenId] = _from;
+        donorTokenIds[_from].push(_tokenId);
         return IERC721Receiver.onERC721Received.selector;
     }
 
