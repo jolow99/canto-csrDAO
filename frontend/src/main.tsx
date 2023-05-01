@@ -5,6 +5,9 @@ import { ThirdwebProvider } from "@thirdweb-dev/react";
 import "./globals.css";
 import { CantoTesnet } from "@thirdweb-dev/chains";
 
+import { configureChains} from 'wagmi';
+import {canto, cantoTestnet} from 'wagmi/chains'
+
 const container = document.getElementById("root");
 const root = createRoot(container!);
 root.render(
