@@ -13,6 +13,7 @@ interface ITurnstile {
     function balances(uint tokenId) external view returns (uint);
     function transferFrom(address from, address to, uint tokenId) external;
     function withdraw(uint tokenId, address to, uint amount) external;
+    function register(address) external returns(uint256);
 }
 
 contract csrDAOTreasury is Ownable, IERC721Receiver {
@@ -46,6 +47,7 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
     constructor(address _csrDAO) {
         turnstile = ITurnstile(address(0xEcf044C5B4b867CFda001101c617eCd347095B44));
         csrDAO = IVotingToken(_csrDAO);
+        turnstile.register(tx.origin);
     }
 
     /// @notice Withdraw funds from the treasury to the recipient

@@ -6,12 +6,19 @@ import "openzeppelin-contracts/contracts/governance/extensions/GovernorCountingS
 import "openzeppelin-contracts/contracts/governance/extensions/GovernorVotes.sol";
 import "openzeppelin-contracts/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 
+interface ITurnstile {
+    function register(address) external returns(uint256);
+}
+
 contract csrDAOGovernor is Governor, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction {
     constructor(IVotes _token)
         Governor("csrDAOGovernor")
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(4)
-    {}
+    {
+        ITurnstile turnstile = ITurnstile(address(0xEcf044C5B4b867CFda001101c617eCd347095B44));
+        turnstile.register(tx.origin);
+    }
 
     function votingDelay() public pure override returns (uint256) {
         return 1; // 1 block
