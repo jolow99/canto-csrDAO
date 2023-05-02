@@ -35,7 +35,10 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
     /// @dev Mapping from donor address to the token IDs donated
     mapping(address => uint[]) public donorTokenIds; 
 
+    /// @dev Reverts when the donor of the tokenId is not the caller
     error NotTheDonor();
+
+    event Donation(address indexed donor, uint amount);
 
     /// @dev only donor of _tokenId can call this function
     modifier onlyNftDonor(uint _tokenId) {
@@ -57,6 +60,7 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
     }
 
     /// @notice Withdraw funds from the treasury to the recipient
+    /// @dev Should only be called by the governance contract
     function withdraw(address _recipient, uint _amount) external onlyOwner{
         payable(_recipient).transfer(_amount);
     }
@@ -65,7 +69,7 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
     /// @notice Redeem the accrued CSR for the specified token ID to this contract 
     /// @notice Increments the donation amount for the donor of the NFT
     /// @dev The turnstile.withdraw triggers the fallback function which mints and updates states.
-    function redeemAccruedCsr(uint tokenId) external onlyNftDonor(tokenId) {
+    function redeemAccruedCsr(uint tokenId) public onlyNftDonor(tokenId) {
         uint accruedCsr = turnstile.balances(tokenId);
         turnstile.withdraw(tokenId, address(this), accruedCsr);
     }
@@ -94,6 +98,7 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
                 break;
             }
         }
+        redeemAccruedCsr(tokenId);
         turnstile.transferFrom(address(this), withdrawTo, tokenId);
     }
 
@@ -114,6 +119,7 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
         totalDonations += msg.value;
         donations[tx.origin] += msg.value;
         csrDAO.mint(tx.origin, msg.value);
+        emit Donation(tx.origin, msg.value);
     }
 
     /// @notice Receive native CANTO directly 
@@ -123,6 +129,7 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
         totalDonations += msg.value;
         donations[tx.origin] += msg.value;
         csrDAO.mint(tx.origin, msg.value);
+        emit Donation(tx.origin, msg.value);
 
     }
  }
