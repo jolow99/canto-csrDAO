@@ -1,4 +1,10 @@
+import addresses from "../constants/addresses.json";
+import { Web3Button, useSDK } from "@thirdweb-dev/react";
+
 export default function MethodDCard() {
+  const sdk = useSDK();
+
+
     return (
       <div className="bg-white py-16">
         <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
@@ -12,9 +18,16 @@ export default function MethodDCard() {
                 <p className="text-sm text-gray-500">Amount</p>
               </div>
               
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <Web3Button
+              contractAddress={addresses.treasury}
+              action={() => sdk?.wallet.transfer(addresses.treasury, "0.1")}
+              overrides={{
+                gasLimit: 10000000,
+                gasPrice: 1000000000,
+              }}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Transfer
-              </button>
+              </Web3Button>
             </div>
       </div>
     )
