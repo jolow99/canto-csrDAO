@@ -29,7 +29,7 @@ export default function AnalyticsCard() {
         <li className="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
           <div className="flex flex-col items-center justify-center space-y-2 p-6">
             <div className="flex flex-col items-center justify-center space-y-1">
-              <h1 className="text-2xl font-bold">{ethers.utils.formatUnits(totalDonations,"ether")}</h1>
+              <h1 className="text-2xl font-bold">{totalDonations && ethers.utils.formatUnits(totalDonations,"ether")}</h1>
               <p className="text-sm text-gray-500">Total Donations</p>
             </div>
           </div>
@@ -37,7 +37,7 @@ export default function AnalyticsCard() {
         <li className="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
           <div className="flex flex-col items-center justify-center space-y-2 p-6">
             <div className="flex flex-col items-center justify-center space-y-1">
-              <h1 className="text-2xl font-bold">{ethers.utils.formatUnits(userDonations,"ether")}</h1>
+              <h1 className="text-2xl font-bold">{userDonations && ethers.utils.formatUnits(userDonations,"ether")}</h1>
               <p className="text-sm text-gray-500">Your Donations</p>
             </div>
           </div>

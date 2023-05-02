@@ -2,6 +2,7 @@ import { useAddress, useContract, useContractRead, useContractWrite, Web3Button 
 import TREASURY_ABI from "../constants/treasury.json";
 import TURNSTILE_ABI from "../constants/turnstile.json";
 import addresses from "../constants/addresses.json";
+import { ethers } from "ethers";
 
 
 
@@ -43,10 +44,10 @@ function NftCard(data: any) {
           <p className="text-sm text-gray-500">Token ID</p>
         </div>
         <div className="flex flex-col items-center justify-center space-y-1">
-          <h1 className="text-2xl font-bold">{parseInt(tokenBalance)}</h1>
+          <h1 className="text-2xl font-bold">{ethers.utils.formatUnits(tokenBalance,"ether")}</h1>
           <p className="text-sm text-gray-500">Balance</p>
         </div>
-        <Web3Button
+        {data.isStaked && <Web3Button
           className="bg-blue-500 hover:bg-blue-200 text-white font-bold py-2 px-4 rounded"
           contractAddress={addresses.treasury}
           action={() =>
@@ -56,7 +57,8 @@ function NftCard(data: any) {
           }
         >
           Unstake
-        </Web3Button>
+        </Web3Button>}
+        
         <Web3Button
           className="bg-blue-500 hover:bg-blue-200 text-white font-bold py-2 px-4 rounded"
           contractAddress={addresses.treasury}
@@ -82,8 +84,10 @@ export default function StakeCard() {
   );
   const address = useAddress();
   const { data: tokenIds } = useContractRead(contract, "getDonorTokenIds", [address]);
-  console.log("Token IDs")
+  const { data: stakedTokenIds } = useContractRead(contract, "getStakedTokenIds", [address])
+  console.log("sTAKED Token IDs")
   console.log(tokenIds)
+  console.log(stakedTokenIds)
 
   return (
     <div  className="py-16">
@@ -101,7 +105,15 @@ export default function StakeCard() {
           tokenIds.map((id:any) => {
             return(
               <div key={id}>
-                <NftCard tokenId={id}/>
+                <NftCard tokenId={id} isStaked={false}/>
+              </div>
+            )
+          })}
+          {stakedTokenIds &&
+          stakedTokenIds.map((id:any) => {
+            return(
+              <div key={id}>
+                <NftCard tokenId={id} isStaked={true}/>
               </div>
             )
           })}

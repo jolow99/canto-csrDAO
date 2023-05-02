@@ -31,11 +31,11 @@ function NftCard(data: any) {
     >
       <div className="flex flex-col items-center justify-center space-y-2 p-6">
         <div className="flex flex-col items-center justify-center space-y-1">
-          <h1 className="text-2xl font-bold">{parseInt(tokenId)}</h1>
+          <h1 className="text-2xl font-bold">{tokenId && parseInt(tokenId)}</h1>
           <p className="text-sm text-gray-500">Token ID</p>
         </div>
         <div className="flex flex-col items-center justify-center space-y-1">
-          <h1 className="text-2xl font-bold">{ethers.utils.formatUnits(tokenBalance, "ether")}</h1>
+          <h1 className="text-2xl font-bold">{tokenBalance && ethers.utils.formatUnits(tokenBalance, "ether")}</h1>
           <p className="text-sm text-gray-500">Balance</p>
         </div>
 
