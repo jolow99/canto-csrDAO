@@ -59,10 +59,10 @@ export default function MintCard(props: { state:number, setter: React.Dispatch<R
   ]);
 
   return (
-    <div>
+    <div className="py-16">
       <div className="border-b border-gray-200 pb-5 mb-5 sm:flex sm:items-center sm:justify-between">
         <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-          Your CSR NFTs
+          CSR NFTs In Your Wallet
         </h2>
       </div>
 
