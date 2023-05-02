@@ -1,6 +1,7 @@
 import { useAddress, useContract, useContractRead } from "@thirdweb-dev/react";
 import TURNSTILE_ABI from "../constants/turnstile.json";
 import addresses from "../constants/addresses.json";
+import { ethers } from "ethers";
 
 
 
@@ -34,7 +35,7 @@ function NftCard(data: any) {
           <p className="text-sm text-gray-500">Token ID</p>
         </div>
         <div className="flex flex-col items-center justify-center space-y-1">
-          <h1 className="text-2xl font-bold">{parseInt(tokenBalance)}</h1>
+          <h1 className="text-2xl font-bold">{ethers.utils.formatUnits(tokenBalance, "ether")}</h1>
           <p className="text-sm text-gray-500">Balance</p>
         </div>
 

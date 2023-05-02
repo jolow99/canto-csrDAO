@@ -86,7 +86,7 @@ export default function StakeCard() {
   console.log(tokenIds)
 
   return (
-    <div>
+    <div  className="py-16">
       <div className="border-b border-gray-200 pb-5 mb-5 sm:flex sm:items-center sm:justify-between">
         <h2 className="text-2xl font-bold tracking-tight text-gray-900">
           CSR NFTs Staked in Treasury 
