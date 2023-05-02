@@ -1,5 +1,7 @@
 import { useAddress, useContract, useContractRead } from "@thirdweb-dev/react";
-import TURNSTILE_ABI from "./abi.json";
+import TURNSTILE_ABI from "../abis/turnstile.json";
+
+
 
 function NftCard(data: any) {
   const address = useAddress();
@@ -16,6 +18,10 @@ function NftCard(data: any) {
     tokenId,
   ]);
 
+  function handleOnClick() {
+    data.setter(parseInt(tokenId));
+  }
+
   return (
     <li
       key={parseInt(tokenId)}
@@ -30,15 +36,18 @@ function NftCard(data: any) {
           <h1 className="text-2xl font-bold">{parseInt(tokenBalance)}</h1>
           <p className="text-sm text-gray-500">Balance</p>
         </div>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Select
-        </button>
+
+        {
+          data.state === parseInt(tokenId) ? 
+          <button onClick={handleOnClick} className="disable bg-gray-500 font-bold py-2 px-4 rounded"><p className="text-sm text-white">Selected</p></button>
+          : <button onClick={handleOnClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"><p className="text-sm text-white">Select</p></button>
+        }
       </div>
     </li>
   );
 }
 
-export default function MintCard() {
+export default function MintCard(props: { state:number, setter: React.Dispatch<React.SetStateAction<number>>}) {
   const { contract, isLoading, error } = useContract(
     "0xEcf044C5B4b867CFda001101c617eCd347095B44",
     TURNSTILE_ABI
@@ -62,7 +71,11 @@ export default function MintCard() {
       >
         {numOfTokens &&
           Array.from(Array(parseInt(numOfTokens)).keys()).map((i, _) => {
-            return <NftCard index={i} />;
+            return(
+              <div key={i}>
+                <NftCard index={i} state={props.state} setter={props.setter}/>
+              </div>
+            )
           })}
       </ul>
     </div>

@@ -7,10 +7,6 @@ export default function MethodCCard() {
         </h2>
       </div>
       <div className="flex flex-col items-center justify-center space-y-2 p-6">
-              <div className="flex flex-col items-center justify-center space-y-1">
-                <h1 className="text-2xl font-bold">2</h1>
-                <p className="text-sm text-gray-500">Selected Token ID</p>
-              </div>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Withdraw
               </button>
