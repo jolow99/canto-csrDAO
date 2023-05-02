@@ -1,5 +1,6 @@
 import { useAddress, useContract, useContractRead } from "@thirdweb-dev/react";
-import TURNSTILE_ABI from "../abis/turnstile.json";
+import TURNSTILE_ABI from "../constants/turnstile.json";
+import addresses from "../constants/addresses.json";
 
 
 
@@ -7,7 +8,7 @@ function NftCard(data: any) {
   const address = useAddress();
 
   const { contract } = useContract(
-    "0xEcf044C5B4b867CFda001101c617eCd347095B44",
+    addresses.turnstile,
     TURNSTILE_ABI
   );
   const { data: tokenId } = useContractRead(contract, "tokenOfOwnerByIndex", [

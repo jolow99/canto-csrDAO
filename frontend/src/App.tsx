@@ -17,7 +17,7 @@ export default function App() {
         <MintCard state={selectedTokenId} setter={setSelectedTokenId} />
         <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <MethodACard state={selectedTokenId}/>
-          <MethodBCard />
+          <MethodBCard state={selectedTokenId}/>
           <MethodCCard />
           <MethodDCard />
         </ul>
