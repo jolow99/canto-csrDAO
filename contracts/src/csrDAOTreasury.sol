@@ -64,12 +64,10 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
 
     /// @notice Redeem the accrued CSR for the specified token ID to this contract 
     /// @notice Increments the donation amount for the donor of the NFT
+    /// @dev The turnstile.withdraw triggers the fallback function which mints and updates states.
     function redeemAccruedCsr(uint tokenId) external onlyNftDonor(tokenId) {
         uint accruedCsr = turnstile.balances(tokenId);
-        donations[msg.sender] += accruedCsr;
-        totalDonations += accruedCsr;
         turnstile.withdraw(tokenId, address(this), accruedCsr);
-        csrDAO.mint(msg.sender, accruedCsr);
     }
 
     /// @notice Stake the specified CSR NFT to this contract
@@ -109,17 +107,23 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
         return IERC721Receiver.onERC721Received.selector;
     }
 
-    /// @notice Receive native CANTO from either the Turnstile, or directly from EOAs
+    /// @notice Receives native CANTO from the Turnstile contract 
+    /// @dev Turnstile uses Address.sendValue with a calldata of "" to send native CANTO
+    /// @dev If you donate from a smart contract, the donations are tagged to the EOA.
+    fallback() external payable {
+        totalDonations += msg.value;
+        donations[tx.origin] += msg.value;
+        csrDAO.mint(tx.origin, msg.value);
+    }
+
+    /// @notice Receive native CANTO directly 
     /// @dev Supports donation methods C and 'others'
+    /// @dev If you donate from a smart contract, the donations are tagged to the EOA.
     receive() external payable {
         totalDonations += msg.value;
-        if (msg.sender == address(turnstile)) {
-            donations[tx.origin] += msg.value;
-            csrDAO.mint(tx.origin, msg.value);
-        } else {
-            donations[msg.sender] += msg.value;
-            csrDAO.mint(msg.sender, msg.value);
-        }
+        donations[tx.origin] += msg.value;
+        csrDAO.mint(tx.origin, msg.value);
 
     }
  }
+
