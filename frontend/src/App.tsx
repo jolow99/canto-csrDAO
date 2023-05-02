@@ -18,7 +18,7 @@ export default function App() {
         <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <MethodACard state={selectedTokenId}/>
           <MethodBCard state={selectedTokenId}/>
-          <MethodCCard />
+          <MethodCCard state={selectedTokenId}/>
           <MethodDCard />
         </ul>
       </main>

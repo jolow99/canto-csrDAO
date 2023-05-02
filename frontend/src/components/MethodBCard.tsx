@@ -9,7 +9,6 @@ import TREASURY_ABI from "../constants/treasury.json";
 import addresses from "../constants/addresses.json";
 
 export default function MethodBCard(props:any) {
-  const address = useAddress();
   const { contract:turnstile } = useContract(addresses.turnstile, TURNSTILE_ABI);
   const { mutateAsync:approve} = useContractWrite(
     turnstile,
