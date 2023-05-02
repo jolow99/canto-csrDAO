@@ -11,14 +11,14 @@ import "./csrDAOTreasury.sol";
 contract csrDAOGovernor is Governor, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction {
     csrDAOTreasury public treasury;
     
-    constructor(IVotes _token)
+    constructor(IVotes _token, address _treasury)
         Governor("csrDAOGovernor")
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(4)
     {
         ITurnstile turnstile = ITurnstile(address(0xEcf044C5B4b867CFda001101c617eCd347095B44));
         turnstile.register(tx.origin);
-        treasury = new csrDAOTreasury(address(_token));
+        treasury = csrDAOTreasury(payable(_treasury));
     }
 
     function votingDelay() public pure override returns (uint256) {
