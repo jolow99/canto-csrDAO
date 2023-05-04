@@ -11,8 +11,6 @@ export default function AnalyticsCard() {
   const address = useAddress();
   const { data: totalDonations } = useContractRead(contract, "totalDonations", []);
   const { data: userDonations } = useContractRead(contract, "donations", [address])
-  console.log(totalDonations)
-  console.log(userDonations)
 
   return (
     <div>
