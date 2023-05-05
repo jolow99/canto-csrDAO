@@ -82,7 +82,7 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
     /// @dev Supports donation method B
     function stakeCsrNft(uint tokenId) external {
         stakedTokenIds[tokenId] = true;
-        turnstile.transferFrom(msg.sender, address(this), tokenId);
+        turnstile.safeTransferFrom(msg.sender, address(this), tokenId);
     }
 
     /// @notice Withdraw the specified CSR NFT from this contract
