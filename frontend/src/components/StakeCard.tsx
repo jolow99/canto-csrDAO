@@ -5,7 +5,7 @@ import {
 } from "@thirdweb-dev/react";
 import TREASURY_ABI from "../constants/treasury.json";
 import addresses from "../constants/addresses.json";
-import TreasuryDonateCard from "./TreasuryDonateCard";
+import TreasuryCard from "./TreasuryCard";
 
 export default function StakeCard() {
   const { contract } = useContract(addresses.treasury, TREASURY_ABI);
@@ -33,7 +33,7 @@ export default function StakeCard() {
           tokenIds.map((id: any) => {
             return (
               <div key={parseInt(id)}>
-                <TreasuryDonateCard tokenId={id}/>
+                <TreasuryCard tokenId={id}/>
               </div>
             );
           })}
