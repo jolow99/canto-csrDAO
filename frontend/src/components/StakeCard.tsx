@@ -6,7 +6,6 @@ import {
 import TREASURY_ABI from "../constants/treasury.json";
 import addresses from "../constants/addresses.json";
 import TreasuryDonateCard from "./TreasuryDonateCard";
-import TreasuryStakeCard from "./TreasuryStakeCard";
 
 export default function StakeCard() {
   const { contract } = useContract(addresses.treasury, TREASURY_ABI);
@@ -14,17 +13,9 @@ export default function StakeCard() {
   const { data: tokenIds } = useContractRead(contract, "getDonorTokenIds", [
     address,
   ]);
-  const { data: stakedTokenIds } = useContractRead(
-    contract,
-    "getStakedTokenIds",
-    [address]
-  );
 
-  console.log("Token Ids")
+  console.log("TOKEN IDs")
   console.log(tokenIds)
-
-  console.log("Staked Token Ids")
-  console.log(stakedTokenIds) 
 
   return (
     <div className="py-16">
@@ -46,15 +37,7 @@ export default function StakeCard() {
               </div>
             );
           })}
-        {stakedTokenIds &&
-          stakedTokenIds.map((id: any) => {
-            return (
-              <div key={id}>
-                <TreasuryStakeCard tokenId={id}/>
-              </div>
-            );
-          })}
-        {!tokenIds && !stakedTokenIds && (
+        {!tokenIds && (
           <div className="">
             <div className="flex flex-col items-center justify-center space-y-1">
               <h1 className="text-xl">

@@ -54,7 +54,7 @@ export default function TreasuryStakeCard(data: any) {
               contractAddress={addresses.treasury}
               action={() =>
                 unstake({
-                  args: [parseInt(data.tokenId), address],
+                  args: [parseInt(data.tokenId)],
                 })
               }
             >
