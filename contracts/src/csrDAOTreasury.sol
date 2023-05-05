@@ -11,7 +11,7 @@ interface IVotingToken {
 
 interface ITurnstile {
     function balances(uint tokenId) external view returns (uint);
-    function transferFrom(address from, address to, uint tokenId) external;
+    function safeTransferFrom(address from, address to, uint tokenId) external;
     function withdraw(uint tokenId, address to, uint amount) external;
     function register(address) external returns(uint256);
 }
@@ -99,7 +99,7 @@ contract csrDAOTreasury is Ownable, IERC721Receiver {
             }
         }
         redeemAccruedCsr(tokenId);
-        turnstile.transferFrom(address(this), msg.sender, tokenId);
+        turnstile.safeTransferFrom(address(this), msg.sender, tokenId);
     }
 
     /// @notice Receive the NFT from the Canto turnstile contract
